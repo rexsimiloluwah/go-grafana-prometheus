@@ -1,0 +1,12 @@
+FROM golang:1.16-alpine AS builder 
+RUN mkdir /app 
+COPY . /app 
+WORKDIR /app 
+RUN go build -o bin/main main.go
+
+# for the multi-stage build
+FROM alpine  
+WORKDIR /app 
+COPY --from=builder /app /app/
+EXPOSE 5000
+CMD ["/app/bin/main"]
